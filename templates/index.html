@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phân loại trái cây Tươi/Hỏng - OpenCV</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🍎 Phân loại trái cây Tươi/Hỏng</h1>
+      <p class="subtitle">Sử dụng kỹ thuật Xử lý ảnh với OpenCV</p>
+    </header>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+      <div class="upload-box" id="uploadBox">
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <div class="upload-content">
+          <div class="upload-icon">📸</div>
+          <h2>Upload ảnh trái cây</h2>
+          <p>Click để chọn ảnh hoặc kéo thả ảnh vào đây</p>
+          <p class="file-info">Hỗ trợ: JPG, PNG, BMP, TIFF, WebP, GIF, ICO, PPM, SVG (Max 16MB)</p>
+          <button class="btn-primary" id="selectFileBtn">
+            Chọn ảnh
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading -->
+    <div class="loading" id="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Đang phân tích ảnh...</p>
+    </div>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results" style="display: none;">
+      <h2>📊 Kết quả phân tích</h2>
+
+      <!-- Classification Result -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3>🎯 Kết quả phân loại</h3>
+        </div>
+        <div class="result-body">
+          <div class="classification-result">
+            <div class="status-badge" id="statusBadge">
+              <span class="status-icon" id="statusIcon">🍎</span>
+              <span class="status-text" id="statusText">FRESH</span>
+            </div>
+            <div class="health-score">
+              <div class="score-label">Điểm sức khỏe</div>
+              <div class="score-value" id="healthScore">--</div>
+              <div class="score-bar">
+                <div class="score-fill" id="scoreFill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="confidence">
+            <strong>Độ tin cậy:</strong> <span id="confidence">--</span>
+          </div>
+
+          <div class="reason" id="reason"></div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon">🎨</div>
+          <div class="metric-label">Màu sắc</div>
+          <div class="metric-value" id="colorScore">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🔲</div>
+          <div class="metric-label">Texture</div>
+          <div class="metric-value" id="textureScore">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">✨</div>
+          <div class="metric-label">Bề mặt</div>
+          <div class="metric-value" id="smoothScore">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">⚠️</div>
+          <div class="metric-label">Vết hỏng</div>
+          <div class="metric-value" id="defectCount">--</div>
+        </div>
+      </div>
+
+      <!-- Visualizations -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3>🔬 Phân tích chi tiết</h3>
+        </div>
+        <div class="result-body">
+          <div class="images-grid">
+            <div class="image-item">
+              <img id="imgOriginal" src="" alt="Original">
+              <p>Ảnh gốc</p>
+            </div>
+            <div class="image-item">
+              <img id="imgHue" src="" alt="Hue">
+              <p>Hue (Màu sắc)</p>
+            </div>
+            <div class="image-item">
+              <img id="imgSaturation" src="" alt="Saturation">
+              <p>Saturation (Độ bão hòa)</p>
+            </div>
+            <div class="image-item">
+              <img id="imgValue" src="" alt="Value">
+              <p>Value (Độ sáng)</p>
+            </div>
+            <div class="image-item">
+              <img id="imgEdges" src="" alt="Edges">
+              <p>Edge Detection</p>
+            </div>
+            <div class="image-item">
+              <img id="imgDefects" src="" alt="Defects">
+              <p>Phát hiện vết hỏng</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Techniques Used -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3>📚 Kỹ thuật xử lý ảnh sử dụng</h3>
+        </div>
+        <div class="result-body">
+          <ul class="techniques-list">
+            <li>
+              <strong>HSV Color Space:</strong>
+              Phân tích màu sắc, độ bão hòa, độ sáng
+            </li>
+            <li>
+              <strong>Edge Detection:</strong>
+              Sobel, Laplacian, Canny để phát hiện biên
+            </li>
+            <li>
+              <strong>Texture Analysis:</strong>
+              Entropy, variance để đánh giá độ nhám bề mặt
+            </li>
+            <li>
+              <strong>Morphological Operations:</strong>
+              Erosion, Dilation, Opening, Closing
+            </li>
+            <li>
+              <strong>Adaptive Thresholding:</strong>
+              Ngưỡng hóa thích ứng để tách vùng
+            </li>
+            <li>
+              <strong>Contour Detection:</strong>
+              Phát hiện và đếm vùng khuyết tật
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <button class="btn-secondary" onclick="resetUpload()">
+        🔄 Phân tích ảnh khác
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>Đồ án môn Nhập môn Xử lý Ảnh - OpenCV</p>
+      <p>Sử dụng: Python, OpenCV, Flask</p>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
